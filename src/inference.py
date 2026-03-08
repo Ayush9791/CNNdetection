@@ -21,34 +21,23 @@ def load_model(model_path: str):
 def preprocess_image(image_path: str, img_size: int) -> np.ndarray:
     image = Image.open(image_path).convert("RGB")
     image = image.resize((img_size, img_size))
-    arr = np.asarray(image, dtype=np.float32)
+
+    arr = np.asarray(image, dtype=np.float32) / 255.0
     arr = np.expand_dims(arr, axis=0)
+
     return arr
 
-
-def predict_image(model, image_path: str, img_size: int = 224, threshold: float = 0.5) -> PredictionResult:
+def predict_image(model, image_path: str, img_size: int = 224) -> PredictionResult:
     image_arr = preprocess_image(image_path, img_size)
-    prob_cancer = float(model.predict(image_arr, verbose=0)[0][0])
-    label = "cancer" if prob_cancer >= threshold else "normal"
-    return PredictionResult(probability_cancer=prob_cancer, predicted_label=label)
+
+    prob_normal = float(model.predict(image_arr, verbose=0)[0][0])
+    prob_cancer = 1 - prob_normal
+
+    label = "cancer" if prob_cancer >= 0.5 else "normal"
+
+    return PredictionResult(
+        probability_cancer=prob_cancer,
+        predicted_label=label
+    )
 
 
-def batch_predict_folder(model, folder_path: str, img_size: int = 224, threshold: float = 0.5):
-    results = []
-    valid_ext = {".png", ".jpg", ".jpeg", ".bmp", ".tiff"}
-
-    for path in sorted(Path(folder_path).iterdir()):
-        if path.suffix.lower() not in valid_ext:
-            continue
-
-        pred = predict_image(model, str(path), img_size=img_size, threshold=threshold)
-        results.append(
-            {
-                "file": path.name,
-                "predicted_label": pred.predicted_label,
-                "probability_cancer": pred.probability_cancer,
-                "probability_normal": 1.0 - pred.probability_cancer,
-            }
-        )
-
-    return results
