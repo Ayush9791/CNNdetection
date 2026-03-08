@@ -86,4 +86,3 @@ if uploaded_file:
     st.bar_chart(chart_df.set_index("class"))
 
 st.markdown("---")
-st.caption("Research tool only. Not intended for medical diagnosis.")
