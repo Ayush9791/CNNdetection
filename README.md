@@ -24,14 +24,12 @@ https://www.kaggle.com/datasets/mohamedhanyyy/chest-ctscan-images
 
 ### Classes in Dataset
 
-The dataset contains CT scan images divided into four categories:
+For this project, the dataset was simplified into **two categories**:
 
-- **Adenocarcinoma** – A common type of lung cancer.
-- **Large Cell Carcinoma** – A fast-growing cancer type.
-- **Normal** – Healthy lung CT scans.
-- **Squamous Cell Carcinoma** – Another type of lung cancer.
+- **Normal** – Healthy lung CT scan images  
+- **Cancer** – CT scans showing lung cancer  
 
-These labeled images allow the CNN to learn patterns associated with each class.
+Reducing the dataset to a **binary classification problem** helps the CNN focus on distinguishing between healthy and abnormal lung structures.
 
 ---
 
